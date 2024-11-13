@@ -53,10 +53,10 @@ public class Main {
 					tipoAlgoritmo=7;
 				}
 				if(tipoAlgoritmo<1 || tipoAlgoritmo>6){
-					System.out.println("Agregue un dato entero entre 1 y 6.");
+					System.out.println("Agregue un dato entero entre 1 al 7.");
 					System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.- Planificación garantizada\n6.-Boletos de Loteria\n7.- Participacion equitativa");
 				}
-			}while(tipoAlgoritmo<1 || tipoAlgoritmo>6);
+			}while(tipoAlgoritmo<1 || tipoAlgoritmo>7);
 			
 			switch (tipoAlgoritmo) {
 				case 1:
@@ -82,6 +82,10 @@ public class Main {
 				case 6:
 					// Llamar al método de Boletos de loteria
 					boletos(procesos, tipoPlanificacion);
+					break;
+				case 7:
+					// Llamar al método de Boletos de loteria
+					participacionEquitativa(procesos, tipoPlanificacion);
 					break;
 				default:
 					System.out.println("Opción no válida");
@@ -256,17 +260,16 @@ public class Main {
 		ArrayList<Proceso> usuario2 = new ArrayList<Proceso>();
 		
 		for(int i=0;i<c.size();i++){
-			if(c.get(i).getPrioridad()==4){
+			if(c.get(i).getPrioridad()==4 || c.get(i).getPrioridad()==2){
 				usuario1.add(c.get(i));
 			}
-			if(c.get(i).getPrioridad()==3){
+			if(c.get(i).getPrioridad()==3 || c.get(i).getPrioridad()==1){
 				usuario2.add(c.get(i));
 			}
 		}
 
 		imprimirProcesos(usuario1);
 		imprimirProcesos(usuario2);
-
 		recoridoDeParticiones(usuario1, tipoPlanificacion, 2);
 		recoridoDeParticiones(usuario2, tipoPlanificacion, 2);
     }
@@ -362,12 +365,28 @@ public class Main {
     }
 	
 	//método de Participacion Equitativa
-	public static void participacionEquitativa(ArrayList<Proceso>C,int tipoPlanificacion) {
-		if(tipoPlanificacion==1){
-
-		}else{
-
+	public static void participacionEquitativa(ArrayList<Proceso>c,int tipoPlanificacion) {
+		int nProcesosUsuario1=0;
+		int nProcesosUsuario2=0;
+		ArrayList<Proceso> usuario1 = new ArrayList<Proceso>();
+		ArrayList<Proceso> usuario2 = new ArrayList<Proceso>();
+		
+		for(int i=0;i<c.size();i++){
+			if(c.get(i).getPrioridad()==4 || c.get(i).getPrioridad()==2){
+				usuario1.add(c.get(i));
+				nProcesosUsuario1++;
+			}
+			if(c.get(i).getPrioridad()==3 || c.get(i).getPrioridad()==1){
+				usuario2.add(c.get(i));
+				nProcesosUsuario2++;
+			}
 		}
+
+		imprimirProcesos(usuario1);
+		imprimirProcesos(usuario2);
+		recoridoDeParticiones(usuario1, tipoPlanificacion, nProcesosUsuario1);
+		recoridoDeParticiones(usuario2, tipoPlanificacion, nProcesosUsuario2);
+    
     }
 
 	// static Proceso indica el tipo de valor que este método va a devolver 
