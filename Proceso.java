@@ -1,7 +1,9 @@
-import java.util.Random;
-public class Proceso {
-	Random random=new Random();
 
+import java.util.Random;
+
+public class Proceso implements Comparable<Proceso> {
+	Random random=new Random();
+ 
 	//atributos
 	private boolean seEjecuto;
 	static int idr=0;
@@ -23,6 +25,11 @@ public class Proceso {
 		this.boletos=prioridad*2;
 	}
 
+	public int getBoletos(){
+		return boletos;
+	}
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -69,20 +76,13 @@ public class Proceso {
 		return quantum;
 	}
 
-	public int getBoletos(){
-		return boletos;
-	}
-	
 	public void setQuantum(int quantum) {
 		this.quantum = quantum;
 	}
-	
 	public boolean getSeEjecuto(){
 		return seEjecuto;
 	}
-
 	@Override
-
 	public String toString() {
 		if(tiempoR>9 && id>9){
 			
@@ -99,5 +99,8 @@ public class Proceso {
 			return "||    "+id+"    ||    "+tiempoR+"      ||   "+estado+"    ||      "+prioridad+"    ||";
 		}
 	}
-	
+	@Override
+	public int compareTo(Proceso o) {
+		return o.getPrioridad()-this.prioridad;
+	}	
 }
