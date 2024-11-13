@@ -132,7 +132,6 @@ public class Main {
 				}else{
 					System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */
 				}
-				}else{System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */}
 				if(i==c.size()-1){i=-1;}
 			}
 		}else{/*No Apropiativo */
