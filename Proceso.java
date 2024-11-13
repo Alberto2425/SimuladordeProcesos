@@ -1,9 +1,8 @@
 
 import java.util.Random;
-
 public class Proceso implements Comparable<Proceso> {
 	Random random=new Random();
-
+ 
 	//atributos
 	private boolean seEjecuto;
 	static int idr=0;
@@ -12,6 +11,7 @@ public class Proceso implements Comparable<Proceso> {
 	private int estado;
 	private int prioridad;
 	private int quantum;
+	private int boletos;
 
 	public Proceso(int quantum) {
 		seEjecuto=false;
@@ -21,8 +21,12 @@ public class Proceso implements Comparable<Proceso> {
 		this.estado = random.nextInt(2)+1;
 		this.prioridad=random.nextInt(4)+1;
 		this.quantum=quantum;
+		this.boletos=prioridad*2;
 	}
 
+	public int getBoletos(){
+		return boletos;
+	}
 	
 	
 	public int getId() {
@@ -44,7 +48,6 @@ public class Proceso implements Comparable<Proceso> {
 
 	public int getEstado() {
 		return estado;
-
 	}
 
 	public void setEstado(int estado) {

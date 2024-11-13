@@ -17,32 +17,30 @@ public class Main {
 		Random random = new Random();
 		int nProcesos = random.nextInt(10) + 1;
 		ArrayList<Proceso>procesos=new ArrayList<Proceso>();
-
 		int quantum=random.nextInt(4)+1;
-		
-			//menu
-			do{
-				
-				for(int i=0; i<nProcesos; i++) {
-					Proceso p=new Proceso(quantum);
-					procesos.add(p);
-				}
-	
+
+		//menu
+		do{
+			for(int i=0; i<nProcesos; i++) {
+				Proceso p=new Proceso(quantum);
+				procesos.add(p);
+			}
+
 			System.out.println("Que tipo de algoritmo de planificacion usar por default?");
 			System.out.println("1.- apropiativo \n2.- no apropiativo\n3.- Cerrar programa");
-	
-					do{
-						cadena=leer.nextLine();
-						if(isNumeric(cadena)==true){
-							tipoPlanificacion = Integer.parseInt(cadena);
-						}else{
-							tipoPlanificacion=3;
-						}
-							if(tipoPlanificacion<1 || tipoPlanificacion>3){
-							System.out.println("Agregue un dato entero entre 1 y 3 para continuar.\n1.- apropiativo n\2.- no apropiativo\2.- Cerrar Programa");
-							}
-					}while(tipoPlanificacion<1 || tipoPlanificacion>3);
-					if(tipoPlanificacion==3){break;}
+
+			do{
+				cadena=leer.nextLine();
+				if(isNumeric(cadena)==true){
+					tipoPlanificacion = Integer.parseInt(cadena);
+				}else{
+					tipoPlanificacion=3;
+				}
+				if(tipoPlanificacion<1 || tipoPlanificacion>3){
+					System.out.println("Agregue un dato entero entre 1 y 3 para continuar.\n1.- apropiativo n\2.- no apropiativo\2.- Cerrar Programa");
+				}
+			}while(tipoPlanificacion<1 || tipoPlanificacion>3);
+			if(tipoPlanificacion==3){break;}
 				
 			System.out.println("Que algoritmo usaras?");
 			System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.-Boletos de Loteria\n6.- Participacion equitativa");
@@ -53,10 +51,10 @@ public class Main {
 				}else{
 					tipoAlgoritmo=7;
 				}
-					if(tipoAlgoritmo<1 || tipoAlgoritmo>6){
+				if(tipoAlgoritmo<1 || tipoAlgoritmo>6){
 					System.out.println("Agregue un dato entero entre 1 y 6.");
-					System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.-Boletos de Loteria\n6.- Participacion equitativa");
-					}
+					System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.- Participacion equitativa\n6.-Boletos de Loteria");
+				}
 			}while(tipoAlgoritmo<1 || tipoAlgoritmo>6);
 			System.out.println("El tiempo de simulacion es : "+tiempoM);
 			imprimirProcesos(procesos);
@@ -95,9 +93,9 @@ public class Main {
 
 			nProcesos = random.nextInt(10) + 1;
 		}while(tipoPlanificacion!=3);
-	
-			leer.close();
-		}
+
+		leer.close();
+	}
 		
 
 	//Round-Robin
@@ -107,7 +105,7 @@ public class Main {
 			for(int i=0;i<c.size();i++){
 				if(tiempoM<=0){break;}
 				r.setD(1);
-				System.out.print(r.getD()+". Entra Proceso "+c.get(i).getId()+" ");
+				System.out.print(". Entra Proceso "+c.get(i).getId()+" ");
 				//se verifica que el proceso este listo
 				if(c.get(i).getEstado()!=2){
 					//si el proceso aun no esta listo se genera un random para saber si se desbloqueo
@@ -131,6 +129,9 @@ public class Main {
 						System.out.print(", se ejecuta "+c.get(i).getQuantum()+" unidades\n");
 						c.get(i).setQuantum(c.get(i).getQuantum()*2);/*Si el proceso no termino el quantum se dobla*/
 					}
+				}else{
+					System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */
+				}
 				}else{System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */}
 				if(i==c.size()-1){i=-1;}
 			}
@@ -153,6 +154,11 @@ public class Main {
 						xaux+=x;
 						c.get(i).setTiempoR(c.get(i).getTiempoR()-x);
 						tiempoM-=x;
+						if(tiempoM<=0){
+							c.get(i).setTiempoR(c.get(i).getTiempoR()-tiempoM);
+							xaux+=tiempoM;
+							tiempoM=0;
+						}
 					if(tiempoM<=0){
 						c.get(i).setTiempoR(c.get(i).getTiempoR()-tiempoM);
 						xaux+=tiempoM;
@@ -251,12 +257,90 @@ public class Main {
     }
 
 	//método de Boletos de loteria
-	public static void boletos(ArrayList<Proceso>C,int tipoPlanificacion) {
+	public static void boletos(ArrayList<Proceso>c,int tipoPlanificacion) {
+		System.out.println("\nInforme de ejecución con Boletos de Lotería:");
 		if(tipoPlanificacion==1){
-
-		}else{
-
-		}
+			do{
+				if(c.size() <= 0){
+					break;
+				}
+				Proceso proceso = calcularSorteoBoleto(c);
+				r.setD(1);
+				System.out.print("Entra Proceso "+proceso.getId()+" ");
+				if(proceso.getEstado()!=2){
+					//si el proceso aun no esta listo se genera un random para saber si se desbloqueo
+					proceso.setEstado(random.nextInt(2)+1);
+				}
+				if(proceso.getEstado()==2){
+					//si el proceso esta listo se resta el valor del quantum al tiempo restante
+					proceso.setTiempoR(proceso.getTiempoR()-proceso.getQuantum());
+					tiempoM-=proceso.getQuantum();
+					if(tiempoM<=0){
+						proceso.setTiempoR(proceso.getTiempoR()-tiempoM);
+						tiempoM=0;
+					}
+					if(proceso.getTiempoR()<=0/*El proceso termino*/){
+						r.setA(proceso.getId());
+						System.out.print(", se ejecuta "+(proceso.getQuantum()+proceso.getTiempoR())+" unidades y termina\n");
+						tiempoM-=proceso.getTiempoR();/*si el proceso termino el tiempo de simulacion se le suma el resto del tiempo restante*/
+						c.remove(proceso);
+					}else{
+						System.out.print(", se ejecuta "+proceso.getQuantum()+" unidades\n");
+						proceso.setQuantum(proceso.getQuantum()*2);/*Si el proceso no termino el quantum se dobla*/
+					}
+				}else{
+					System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */
+				}
+			}while(tiempoM > 0);
+		
+		}else{/*No Apropiativo */
+			do{
+				int x=0;
+				int xaux=0;
+				if(tiempoM<=0){break;}
+				if(c.size() <= 0){break;}
+				r.setD(1);
+				Proceso proceso = calcularSorteoBoleto(c);
+				System.out.print("Entra Proceso "+proceso.getId()+" ");
+				//se verifica que el proceso este listo
+				if(proceso.getEstado()!=2){
+					//si el proceso aun no esta listo se genera un random para saber si se desbloqueo
+					proceso.setEstado(random.nextInt(2)+1);
+				}
+				if(proceso.getEstado()==2){
+					//si el proceso esta listo se resta el valor un valor aleatorio al tiempo restante
+					for(int j=0;j<200;j++){
+						x=random.nextInt(3)+2;
+						xaux+=x;
+						proceso.setTiempoR(proceso.getTiempoR()-x);
+						tiempoM-=x;
+					if(tiempoM<=0){
+						proceso.setTiempoR(proceso.getTiempoR()-tiempoM);
+						xaux+=tiempoM;
+						tiempoM=0;
+					}
+						if(proceso.getTiempoR()<=0/*El proceso termino*/){
+							xaux+=proceso.getTiempoR();
+							break;
+						}
+						proceso.setEstado(random.nextInt(2)+1);
+						if(proceso.getEstado()!=2){
+							proceso.setEstado(random.nextInt(2)+1);
+							break;
+						}
+					}
+					if(proceso.getTiempoR()<=0/*El proceso termino*/){
+						System.out.print(", se ejecuta "+xaux+" unidades y termina\n");
+						r.setA(proceso.getId());
+						tiempoM=tiempoM-proceso.getTiempoR();/*si el proceso termino el tiempo de simulacion se le suma el resto del tiempo restante*/
+						c.remove(proceso);
+					}else{
+						System.out.print(", se ejecuta "+xaux+" unidades\n");
+						/*Si el proceso no termino*/
+					}
+				}else{System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */}
+			}while(tiempoM > 0);
+		}	
     }
 
 	//método de Proceso más corto primero
@@ -277,6 +361,24 @@ public class Main {
 		}
     }
 
+	// static Proceso indica el tipo de valor que este método va a devolver 
+	private static Proceso calcularSorteoBoleto(ArrayList<Proceso> c) {
+		int total = 0;			
+		for(int i=0;i<c.size();i++){
+			total += c.get(i).getBoletos();
+		}
+		int boletoGanador = random.nextInt(total) + 1;
+		int acumulador = 0;
+		for(int i=0;i<c.size();i++){
+			acumulador += c.get(i).getBoletos();
+			if (boletoGanador <= acumulador) {
+				return c.get(i);
+			}
+		}
+		return null;
+	}
+
+
 
 
 	public static boolean isNumeric(String cadena) {
@@ -292,6 +394,7 @@ public class Main {
 
         return resultado;
     }
+
 	public static void Ejecuto(ArrayList<Proceso>c){
 		for(int i=0;i<c.size();i++){
 			if(c.get(i).getSeEjecuto()==true){
@@ -302,6 +405,7 @@ public class Main {
 			}
 		}
 	}
+	
 	public static void imprimirProcesos(ArrayList<Proceso>c){
 		System.out.println("=================================================");
 		System.out.println("|| proceso || TiempoRes || estado || prioridad ||");
