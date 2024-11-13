@@ -10,6 +10,7 @@ public class Proceso {
 	private int estado;
 	private int prioridad;
 	private int quantum;
+	private int boletos;
 
 	public Proceso(int quantum) {
 		seEjecuto=false;
@@ -19,6 +20,7 @@ public class Proceso {
 		this.estado = random.nextInt(2)+1;
 		this.prioridad=random.nextInt(4)+1;
 		this.quantum=quantum;
+		this.boletos=prioridad*2;
 	}
 
 	public int getId() {
@@ -67,13 +69,20 @@ public class Proceso {
 		return quantum;
 	}
 
+	public int getBoletos(){
+		return boletos;
+	}
+	
 	public void setQuantum(int quantum) {
 		this.quantum = quantum;
 	}
+	
 	public boolean getSeEjecuto(){
 		return seEjecuto;
 	}
+
 	@Override
+
 	public String toString() {
 		if(tiempoR>9 && id>9){
 			

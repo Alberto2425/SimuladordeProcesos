@@ -1,101 +1,102 @@
-
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
+
 public class Main {
-static Reporte r=new Reporte();
-static Random random = new Random();
-static int tiempoM=random.nextInt(11)+15;;
-public static void main(String[] args) {
-	Scanner leer=new Scanner(System.in);
-	String cadena;
-	int tipoPlanificacion;
-	int tipoAlgoritmo;
-	Random random = new Random();
-	int nProcesos = random.nextInt(10) + 1;
-	ArrayList<Proceso>procesos=new ArrayList<Proceso>();
-	int quantum=random.nextInt(4)+1;
+	static Reporte r=new Reporte();
+	static Random random = new Random();
+	static int tiempoM=random.nextInt(11)+15;
 
-	//menu
-	do{
-		
-		for(int i=0; i<nProcesos; i++) {
-			Proceso p=new Proceso(quantum);
-			procesos.add(p);
-		}
+	public static void main(String[] args) {
+		Scanner leer=new Scanner(System.in);
+		String cadena;
+		int tipoPlanificacion;
+		int tipoAlgoritmo;
+		Random random = new Random();
+		int nProcesos = random.nextInt(10) + 1;
+		ArrayList<Proceso>procesos=new ArrayList<Proceso>();
+		int quantum=random.nextInt(4)+1;
 
-		System.out.println("Que tipo de algoritmo de planificacion usar por default?");
-		System.out.println("1.- apropiativo \n2.- no apropiativo\n3.- Cerrar programa");
-
+		//menu
 		do{
-			cadena=leer.nextLine();
-			if(isNumeric(cadena)==true){
-				tipoPlanificacion = Integer.parseInt(cadena);
-			}else{
-				tipoPlanificacion=3;
-			}
-			if(tipoPlanificacion<1 || tipoPlanificacion>3){
-				System.out.println("Agregue un dato entero entre 1 y 3 para continuar.\n1.- apropiativo n\2.- no apropiativo\2.- Cerrar Programa");
-			}
-		}while(tipoPlanificacion<1 || tipoPlanificacion>3);
-		if(tipoPlanificacion==3){break;}
 			
-		System.out.println("Que algoritmo usaras?");
-		System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.-Boletos de Loteria\n6.- Participacion equitativa");
-		do{
-			cadena=leer.nextLine();
-			if(isNumeric(cadena)==true){
-				tipoAlgoritmo = Integer.parseInt(cadena);
-			}else{
-				tipoAlgoritmo=7;
+			for(int i=0; i<nProcesos; i++) {
+				Proceso p=new Proceso(quantum);
+				procesos.add(p);
 			}
-			if(tipoAlgoritmo<1 || tipoAlgoritmo>6){
-			System.out.println("Agregue un dato entero entre 1 y 6.");
+
+			System.out.println("Que tipo de algoritmo de planificacion usar por default?");
+			System.out.println("1.- apropiativo \n2.- no apropiativo\n3.- Cerrar programa");
+
+			do{
+				cadena=leer.nextLine();
+				if(isNumeric(cadena)==true){
+					tipoPlanificacion = Integer.parseInt(cadena);
+				}else{
+					tipoPlanificacion=3;
+				}
+				if(tipoPlanificacion<1 || tipoPlanificacion>3){
+					System.out.println("Agregue un dato entero entre 1 y 3 para continuar.\n1.- apropiativo n\2.- no apropiativo\2.- Cerrar Programa");
+				}
+			}while(tipoPlanificacion<1 || tipoPlanificacion>3);
+			if(tipoPlanificacion==3){break;}
+				
+			System.out.println("Que algoritmo usaras?");
 			System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.-Boletos de Loteria\n6.- Participacion equitativa");
+			do{
+				cadena=leer.nextLine();
+				if(isNumeric(cadena)==true){
+					tipoAlgoritmo = Integer.parseInt(cadena);
+				}else{
+					tipoAlgoritmo=7;
+				}
+				if(tipoAlgoritmo<1 || tipoAlgoritmo>6){
+				System.out.println("Agregue un dato entero entre 1 y 6.");
+				System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.- Participacion equitativa\n6.-Boletos de Loteria");
+				}
+			}while(tipoAlgoritmo<1 || tipoAlgoritmo>6);
+			imprimirProcesos(procesos);
+			switch (tipoAlgoritmo) {
+				case 1:
+					//Llamar al metodo RoundRobin
+					roundRobin(procesos, tipoPlanificacion);
+					break;
+				case 2:
+					// Llamar al método de Prioridades
+					prioridades(procesos, tipoPlanificacion);
+					break;
+				case 3:
+					// Llamar al método de Múltiples colas de prioridad
+					prioridadesMultiples(procesos, tipoPlanificacion);
+					break;
+				case 4:
+					// Llamar al método de Proceso más corto primero
+					cortoF(procesos,tipoPlanificacion);
+					break;
+				case 5:
+					// Llamar al método de Planificacion Garantizada
+					planificacionG(procesos, tipoPlanificacion);
+					break;
+				case 6:
+					// Llamar al método de Boletos de loteria
+					boletos(procesos, tipoPlanificacion);
+					break;
+				default:
+					System.out.println("Opción no válida");
 			}
-		}while(tipoAlgoritmo<1 || tipoAlgoritmo>6);
-		imprimirProcesos(procesos);
-		switch (tipoAlgoritmo) {
-			case 1:
-				//Llamar al metodo RoundRobin
-				roundRobin(procesos, tipoPlanificacion);
-				break;
-			case 2:
-				// Llamar al método de Prioridades
-				prioridades(procesos, tipoPlanificacion);
-				break;
-			case 3:
-				// Llamar al método de Múltiples colas de prioridad
-				prioridadesMultiples(procesos, tipoPlanificacion);
-				break;
-			case 4:
-				// Llamar al método de Proceso más corto primero
-				cortoF(procesos,tipoPlanificacion);
-				break;
-			case 5:
-				// Llamar al método de Planificacion Garantizada
-				planificacionG(procesos, tipoPlanificacion);
-				break;
-			case 6:
-				// Llamar al método de Boletos de loteria
-				boletos(procesos, tipoPlanificacion);
-				break;
-			default:
-				System.out.println("Opción no válida");
-		}
-		Ejecuto(procesos);
-		r.imprimirReporte();
-		imprimirProcesos(procesos);
+			Ejecuto(procesos);
+			r.imprimirReporte();
+			imprimirProcesos(procesos);
 
-		nProcesos = random.nextInt(10) + 1;
-	}while(tipoPlanificacion!=3);
+			nProcesos = random.nextInt(10) + 1;
+		}while(tipoPlanificacion!=3);
 
-	leer.close();
-}
+		leer.close();
+	}
 		
 
-//Round-Robin
-public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
+	//Round-Robin
+	public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 	if(tipoPlanificacion==1/*Apropiativo */){
 		//con cada iteracion entra un proceso nuevo.
 		for(int i=0;i<c.size();i++){
@@ -181,6 +182,7 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 		tiempoM=random.nextInt(11)+15;;
 	}
 }
+	
 	//método de Prioridades
 	public static void prioridades(ArrayList<Proceso>C,int tipoPlanificacion) {
 		if(tipoPlanificacion==1){
@@ -194,6 +196,7 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 		}else{
 		}
     }
+
 	//método de Proceso más corto primero
 	public static void cortoF(ArrayList<Proceso>C,int tipoPlanificacion){
 		if(tipoPlanificacion==1){
@@ -202,6 +205,7 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 
 		}
     }
+
 	//método de Planificacion Garantizada
 	public static void planificacionG(ArrayList<Proceso>C,int tipoPlanificacion) {
 		if(tipoPlanificacion==1){
@@ -210,14 +214,46 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 
 		}
     }
+
 	//método de Boletos de loteria
-	public static void boletos(ArrayList<Proceso>C,int tipoPlanificacion) {
+	public static void boletos(ArrayList<Proceso>c,int tipoPlanificacion) {
+		System.out.println("\nInforme de ejecución con Boletos de Lotería:");
 		if(tipoPlanificacion==1){
-
-		}else{
-
+			do{
+				if(c.size() < 0){
+					break;
+				}
+				Proceso proceso = calcularSorteoBoleto(c);
+				r.setD(1);
+				System.out.print("Entra Proceso "+proceso.getId()+" ");
+				if(proceso.getEstado()!=2){
+					//si el proceso aun no esta listo se genera un random para saber si se desbloqueo
+					proceso.setEstado(random.nextInt(2)+1);
+				}
+				if(proceso.getEstado()==2){
+					//si el proceso esta listo se resta el valor del quantum al tiempo restante
+					proceso.setTiempoR(proceso.getTiempoR()-proceso.getQuantum());
+					tiempoM-=proceso.getQuantum();
+					if(tiempoM<=0){
+						proceso.setTiempoR(proceso.getTiempoR()-tiempoM);
+						tiempoM=0;
+					}
+					if(proceso.getTiempoR()<=0/*El proceso termino*/){
+						r.setA(proceso.getId());
+						System.out.print(", se ejecuta "+(proceso.getQuantum()+proceso.getTiempoR())+" unidades y termina\n");
+						tiempoM-=proceso.getTiempoR();/*si el proceso termino el tiempo de simulacion se le suma el resto del tiempo restante*/
+						c.remove(proceso);
+					}else{
+						System.out.print(", se ejecuta "+proceso.getQuantum()+" unidades\n");
+						proceso.setQuantum(proceso.getQuantum()*2);/*Si el proceso no termino el quantum se dobla*/
+					}
+				}else{
+					System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */
+				}
+			}while(tiempoM > 0);
 		}
     }
+
 	//método de Proceso más corto primero
 	public static void CortoF(ArrayList<Proceso>C,int tipoPlanificacion) {
 		if(tipoPlanificacion==1){
@@ -226,6 +262,7 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 
 		}
     }
+
 	//método de Participacion Equitativa
 	public static void participacionEquitativa(ArrayList<Proceso>C,int tipoPlanificacion) {
 		if(tipoPlanificacion==1){
@@ -234,6 +271,25 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 
 		}
     }
+
+	// static Proceso indica el tipo de valor que este método va a devolver 
+	private static Proceso calcularSorteoBoleto(ArrayList<Proceso> c) {
+		int total = 0;			
+		for(int i=0;i<c.size();i++){
+			total += c.get(i).getBoletos();
+		}
+
+		int boletoGanador = random.nextInt(total) + 1;
+		int acumulador = 0;
+		for(int i=0;i<c.size();i++){
+			acumulador += c.get(i).getBoletos();
+			if (boletoGanador <= acumulador) {
+				return c.get(i);
+			}
+		}
+		return null;
+	}
+
 
 
 
@@ -250,6 +306,7 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 
         return resultado;
     }
+
 	public static void Ejecuto(ArrayList<Proceso>c){
 		for(int i=0;i<c.size();i++){
 			if(c.get(i).getSeEjecuto()==true){
@@ -260,6 +317,7 @@ public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
 			}
 		}
 	}
+	
 	public static void imprimirProcesos(ArrayList<Proceso>c){
 		System.out.println("=================================================");
 		System.out.println("|| proceso || TiempoRes || estado || prioridad ||");
