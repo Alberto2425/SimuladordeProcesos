@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Main {
 	static Reporte r=new Reporte();
 	static Random random = new Random();
-		static int tiempoM=random.nextInt(11)+15;
+		static int tiempoM=random.nextInt(11)+15;;
 		public static void main(String[] args) {
 			Scanner leer=new Scanner(System.in);
 			String cadena;
@@ -54,7 +54,7 @@ public class Main {
 					System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.-Boletos de Loteria\n6.- Participacion equitativa");
 				 }
 			}while(tipoAlgoritmo<1 || tipoAlgoritmo>6);
-	
+			imprimirProcesos(procesos);
 			switch (tipoAlgoritmo) {
 				case 1:
 					//Llamar al metodo RoundRobin
@@ -83,20 +83,25 @@ public class Main {
 				default:
 					System.out.println("Opción no válida");
 			}
-			siEjecuto(procesos);
-			noEjecuto(procesos);
+			Ejecuto(procesos);
 			r.imprimirReporte();
+			imprimirProcesos(procesos);
+
+			nProcesos = random.nextInt(10) + 1;
 		}while(tipoPlanificacion!=3);
 	
 			leer.close();
 		}
 		
+
 		//Round-Robin
 		public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
-			if(tipoPlanificacion==1){
-				//con cada iteracion eb¿ntra un proceso nuevo.
+			if(tipoPlanificacion==1/*Apropiativo */){
+				//con cada iteracion entra un proceso nuevo.
 				for(int i=0;i<c.size();i++){
-					System.out.print(". Entra Proceso "+c.get(i).getId()+" ");
+					if(tiempoM<=0){break;}
+					r.setD(1);
+					System.out.print(r.getD()+". Entra Proceso "+c.get(i).getId()+" ");
 					//se verifica que el proceso este listo
 					if(c.get(i).getEstado()!=2){
 						//si el proceso aun no esta listo se genera un random para saber si se desbloqueo
@@ -105,24 +110,31 @@ public class Main {
 					if(c.get(i).getEstado()==2){
 						//si el proceso esta listo se resta el valor del quantum al tiempo restante
 						c.get(i).setTiempoR(c.get(i).getTiempoR()-c.get(i).getQuantum());
+						tiempoM-=c.get(i).getQuantum();
+						if(tiempoM<=0){
+							c.get(i).setTiempoR(c.get(i).getTiempoR()-tiempoM);
+							tiempoM=0;
+						}
 						if(c.get(i).getTiempoR()<=0/*El proceso termino*/){
+							r.setA(c.get(i).getId());
 							System.out.print(", se ejecuta "+(c.get(i).getQuantum()+c.get(i).getTiempoR())+" unidades y termina\n");
-							r.setB(c.get(i).getId());
-							tiempoM=tiempoM-c.get(i).getTiempoR();/*si el proceso termino el tiempo de simulacion se le suma el resto del tiempo restante*/
+							tiempoM-=c.get(i).getTiempoR();/*si el proceso termino el tiempo de simulacion se le suma el resto del tiempo restante*/
                             c.remove(i);/*se remueve el proceso de la lista*/
 							i--;
 						}else{
 							System.out.print(", se ejecuta "+c.get(i).getQuantum()+" unidades\n");
 							c.get(i).setQuantum(c.get(i).getQuantum()*2);/*Si el proceso no termino el quantum se dobla*/
 						}
-
 					}else{System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */}
+					if(i==c.size()-1){i=-1;}
 				}
 				tiempoM=random.nextInt(11)+15;
-			}else{
+			}else{/*No Apropiativo */
 				int x=0;
 				int xaux=0;
 				for(int i=0;i<c.size();i++){
+					if(tiempoM<=0){break;}
+					r.setD(1);
 					System.out.print(". Entra Proceso "+c.get(i).getId()+" ");
 					//se verifica que el proceso este listo
 					if(c.get(i).getEstado()!=2){
@@ -130,13 +142,19 @@ public class Main {
 						c.get(i).setEstado(random.nextInt(2)+1);
 					}
 					if(c.get(i).getEstado()==2){
-						//si el proceso esta listo se resta el valor del quantum al tiempo restante
+						//si el proceso esta listo se resta el valor un valor aleatorio al tiempo restante
 						for(int j=0;j<200;j++){
 							x=random.nextInt(3)+2;
 							xaux+=x;
 							c.get(i).setTiempoR(c.get(i).getTiempoR()-x);
 							tiempoM-=x;
+						if(tiempoM<=0){
+							c.get(i).setTiempoR(c.get(i).getTiempoR()-tiempoM);
+							xaux+=tiempoM;
+							tiempoM=0;
+						}
 							if(c.get(i).getTiempoR()<=0/*El proceso termino*/){
+								xaux+=c.get(i).getTiempoR();
 								break;
 							}
 							c.get(i).setEstado(random.nextInt(2)+1);
@@ -145,10 +163,9 @@ public class Main {
 								break;
 							}
 						}
-						
 						if(c.get(i).getTiempoR()<=0/*El proceso termino*/){
-							System.out.print(", se ejecuta "+(xaux+c.get(i).getTiempoR())+" unidades y termina\n");
-							r.setB(c.get(i).getId());
+							System.out.print(", se ejecuta "+xaux+" unidades y termina\n");
+							r.setA(c.get(i).getId());
 							tiempoM=tiempoM-c.get(i).getTiempoR();/*si el proceso termino el tiempo de simulacion se le suma el resto del tiempo restante*/
                             c.remove(i);/*se remueve el proceso de la lista*/
 							i--;
@@ -156,30 +173,25 @@ public class Main {
 							System.out.print(", se ejecuta "+xaux+" unidades\n");
 							/*Si el proceso no termino*/
 						}
-
 					}else{System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */}
 					x=0;
 					xaux=0;
+					if(i==c.size()-1){i=-1;}
 				}
-				tiempoM=random.nextInt(11)+15;
-
+				tiempoM=random.nextInt(11)+15;;
 			}
     }
-
 	//método de Prioridades
 	public static void prioridades(ArrayList<Proceso>C,int tipoPlanificacion) {
 		if(tipoPlanificacion==1){
-
 		}else{
-
 		}
     }
+
 	//método de Múltiples colas de prioridad
 	public static void prioridadesMultiples(ArrayList<Proceso>C,int tipoPlanificacion) {
 		if(tipoPlanificacion==1){
-
 		}else{
-
 		}
     }
 	//método de Proceso más corto primero
@@ -238,18 +250,23 @@ public class Main {
 
         return resultado;
     }
-	public static void noEjecuto(ArrayList<Proceso>c){
+	public static void Ejecuto(ArrayList<Proceso>c){
 		for(int i=0;i<c.size();i++){
+			if(c.get(i).getSeEjecuto()==true){
+				r.setC(c.get(i).getId());
+			}
 			if(c.get(i).getSeEjecuto()==false){
 				r.setB(c.get(i).getId());
 			}
 		}
 	}
-	public static void siEjecuto(ArrayList<Proceso>c){
+	public static void imprimirProcesos(ArrayList<Proceso>c){
+		System.out.println("=================================================");
+		System.out.println("|| proceso || TiempoRes || estado || prioridad ||");
+		System.out.println("=================================================");
 		for(int i=0;i<c.size();i++){
-			if(c.get(i).getSeEjecuto()==true){
-				r.setC(c.get(i).getId());
-			}
+			System.out.println(c.get(i).toString());		
 		}
+		System.out.println("=================================================");
 	}
 } 
