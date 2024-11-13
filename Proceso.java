@@ -1,6 +1,5 @@
 
 import java.util.Random;
-
 public class Proceso implements Comparable<Proceso> {
 	Random random=new Random();
  
@@ -49,7 +48,6 @@ public class Proceso implements Comparable<Proceso> {
 
 	public int getEstado() {
 		return estado;
-
 	}
 
 	public void setEstado(int estado) {

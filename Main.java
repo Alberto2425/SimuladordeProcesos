@@ -8,8 +8,7 @@ public class Main {
 	static Random random = new Random();
 	static I Comparator=new I();
 	static ArrayList<Proceso> c2=new ArrayList<Proceso>();
-	static int tiempoM=random.nextInt(11)+15;
-  
+	static int tiempoM=random.nextInt(11)+15;;
 	public static void main(String[] args) {
 		Scanner leer=new Scanner(System.in);
 		String cadena;
@@ -87,7 +86,7 @@ public class Main {
 				default:
 					System.out.println("Opción no válida");
 			}
-			Ejecuto(procesos);
+				Ejecuto(procesos);
 			r.imprimirReporte();
 			imprimirProcesos(procesos);
 			tiempoM=random.nextInt(11)+15;
@@ -133,6 +132,7 @@ public class Main {
 				}else{
 					System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */
 				}
+				}else{System.out.print(", no se ejcuta porque sigue bloqueado \n");/*el proceso nu uso la CPU */}
 				if(i==c.size()-1){i=-1;}
 			}
 		}else{/*No Apropiativo */
@@ -159,6 +159,11 @@ public class Main {
 							xaux+=tiempoM;
 							tiempoM=0;
 						}
+					if(tiempoM<=0){
+						c.get(i).setTiempoR(c.get(i).getTiempoR()-tiempoM);
+						xaux+=tiempoM;
+						tiempoM=0;
+					}
 						if(c.get(i).getTiempoR()<=0/*El proceso termino*/){
 							xaux+=c.get(i).getTiempoR();
 							break;
@@ -346,6 +351,7 @@ public class Main {
 
 		}
     }
+	
 	//método de Participacion Equitativa
 	public static void participacionEquitativa(ArrayList<Proceso>C,int tipoPlanificacion) {
 		if(tipoPlanificacion==1){
