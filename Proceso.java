@@ -73,5 +73,22 @@ public class Proceso {
 	public boolean getSeEjecuto(){
 		return seEjecuto;
 	}
+	@Override
+	public String toString() {
+		if(tiempoR>9 && id>9){
+			
+			return "||    "+id+"   ||    "+tiempoR+"     ||   "+estado+"    ||     "+prioridad+"     ||";
+		
+	}
+		if(id>9){
+			return "||    "+id+"   ||    "+tiempoR+"      ||   "+estado+"    ||      "+prioridad+"    ||";
+		}
+		
+		if(tiempoR>9){
+			return "||    "+id+"    ||    "+tiempoR+"     ||   "+estado+"    ||     "+prioridad+"     ||";
+		}else{
+			return "||    "+id+"    ||    "+tiempoR+"      ||   "+estado+"    ||      "+prioridad+"    ||";
+		}
+	}
 	
 }
