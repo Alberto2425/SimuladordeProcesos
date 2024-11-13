@@ -12,6 +12,8 @@ public class Proceso implements Comparable<Proceso> {
 	private int prioridad;
 	private int quantum;
 	private int boletos;
+	private double usoCpu; 
+  
 
 	public Proceso(int quantum) {
 		seEjecuto=false;
@@ -22,6 +24,7 @@ public class Proceso implements Comparable<Proceso> {
 		this.prioridad=random.nextInt(4)+1;
 		this.quantum=quantum;
 		this.boletos=prioridad*2;
+        this.usoCpu = 0.0;
 	}
 
 	public int getBoletos(){
@@ -73,6 +76,14 @@ public class Proceso implements Comparable<Proceso> {
 	public int getQuantum() {
 		return quantum;
 	}
+
+    public double getUsoCpu() {
+        return usoCpu;
+    }
+
+    public void setUsoCpu(double usoCpu) {
+        this.usoCpu = usoCpu;
+    }
 
 	public void setQuantum(int quantum) {
 		this.quantum = quantum;
