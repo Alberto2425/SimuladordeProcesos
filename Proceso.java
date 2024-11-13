@@ -1,5 +1,7 @@
+
 import java.util.Random;
-public class Proceso {
+
+public class Proceso implements Comparable<Proceso> {
 	Random random=new Random();
 
 	//atributos
@@ -21,6 +23,8 @@ public class Proceso {
 		this.quantum=quantum;
 	}
 
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -90,5 +94,8 @@ public class Proceso {
 			return "||    "+id+"    ||    "+tiempoR+"      ||   "+estado+"    ||      "+prioridad+"    ||";
 		}
 	}
-	
+	@Override
+	public int compareTo(Proceso o) {
+		return o.getPrioridad()-this.prioridad;
+	}	
 }
