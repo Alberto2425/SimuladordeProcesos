@@ -1,8 +1,14 @@
+/* Integrantes:
+ * Garcia Delgado Jorge Alberto
+ * Lopez Sanchez Ary Daniel
+ * 
+ * Repositorio Github:
+ * https://github.com/Alberto2425/SimuladordeProcesos
+ */
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 public class Main {
 	static Reporte r=new Reporte();
 	static Random random = new Random();
