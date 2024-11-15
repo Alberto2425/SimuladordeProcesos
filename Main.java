@@ -16,15 +16,14 @@ public class Main {
 	static ArrayList<Proceso> c2=new ArrayList<Proceso>();
 	static int tiempoM=random.nextInt(11)+18;
 	static int nUsuarios = 2;
+	static int quantum=random.nextInt(4)+1;
 	public static void main(String[] args) {
 		Scanner leer=new Scanner(System.in);
 		String cadena;
 		int tipoPlanificacion;
 		int tipoAlgoritmo;
-		Random random = new Random();
-		int nProcesos = random.nextInt(5) + 10;
+		int nProcesos = random.nextInt(5) + 5;
 		ArrayList<Proceso>procesos=new ArrayList<Proceso>();
-		int quantum=random.nextInt(4)+1;
 
 		//menu
 		do{
@@ -109,11 +108,22 @@ public class Main {
 		
 	//Round-Robin
 	public static void roundRobin(ArrayList<Proceso>c,int tipoPlanificacion) {
+		int pos = random.nextInt(6);
+		boolean bandera = true; // aseguramos que el proceso solo entre una vez
 		System.out.println("El tiempo de simulacion es : "+tiempoM);
 		imprimirProcesos(c);
 		if(tipoPlanificacion==1/*Apropiativo */){
 			//con cada iteracion entra un proceso nuevo.
 			for(int i=0;i<c.size();i++){
+				if(c.get(i).getId() == pos && (bandera == true)) {
+					Proceso p = new Proceso(quantum);
+					c.add(p);
+					System.out.println("*************************************************************");
+					System.out.println("Se creo un nuevo proceso: " + p.getId());
+					System.out.println("*************************************************************");
+					imprimirProcesos(c);
+					bandera = false;
+				}
 				if(tiempoM<=0){break;}
 				r.setD(1);
 				System.out.print(". Entra Proceso "+c.get(i).getId()+" ");
