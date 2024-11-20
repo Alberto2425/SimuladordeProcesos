@@ -16,15 +16,15 @@ public class Main {
 	static ArrayList<Proceso> c2=new ArrayList<Proceso>();
 	static int tiempoM=random.nextInt(11)+18;
 	static int nUsuarios = 2;
+	static int quantum=random.nextInt(4)+1;
 	public static void main(String[] args) {
 		Scanner leer=new Scanner(System.in);
 		String cadena;
 		int tipoPlanificacion;
 		int tipoAlgoritmo;
 		Random random = new Random();
-		int nProcesos = random.nextInt(5) + 10;
+		int nProcesos = random.nextInt(5) + 5;
 		ArrayList<Proceso>procesos=new ArrayList<Proceso>();
-		int quantum=random.nextInt(4)+1;
 
 		//menu
 		do{
@@ -63,7 +63,10 @@ public class Main {
 					System.out.println("1.- Round-robin\n2.- Prioridades\n3.- Multiples colar de prioridad\n4.- Proceso mas corto primero\n5.- Planificación garantizada\n6.-Boletos de Loteria\n7.- Participacion equitativa");
 				}
 			}while(tipoAlgoritmo<1 || tipoAlgoritmo>7);
+
 			
+			imprimirEspecificacionesGenerales(procesos, tipoPlanificacion, tipoAlgoritmo, nProcesos);
+
 			switch (tipoAlgoritmo) {
 				case 1:
 					//Llamar al metodo RoundRobin
@@ -90,7 +93,7 @@ public class Main {
 					boletos(procesos, tipoPlanificacion);
 					break;
 				case 7:
-					// Llamar al método de Boletos de loteria
+					// Llamar al método de Participacion equitativa
 					participacionEquitativa(procesos, tipoPlanificacion);
 					break;
 				default:
@@ -201,6 +204,7 @@ public class Main {
 			}
 		}
 	}
+	
 	//método de Prioridades
 	public static void prioridades(ArrayList<Proceso>c,int tipoPlanificacion) {
 		Collections.sort(c);
@@ -251,7 +255,7 @@ public class Main {
 
 	}
 
-	//método de Proceso más corto primero
+	// 4 - método de Proceso más corto primero
 	public static void cortoF(ArrayList<Proceso>c,int tipoPlanificacion){
 		System.out.println("El tiempo de simulacion es : "+tiempoM);
 		imprimirProcesos(c);
@@ -280,7 +284,7 @@ public class Main {
 		recoridoDeParticiones(usuario2, tipoPlanificacion, 2);
     }
 
-	//método de Boletos de loteria
+	// 6 - método de Boletos de loteria
 	public static void boletos(ArrayList<Proceso>c,int tipoPlanificacion) {
 		System.out.println("El tiempo de simulacion es : "+tiempoM);
 		imprimirProcesos(c);
@@ -370,7 +374,7 @@ public class Main {
 		}	
     }
 	
-	//método de Participacion Equitativa
+	// 7 - método de Participacion Equitativa
 	public static void participacionEquitativa(ArrayList<Proceso>c,int tipoPlanificacion) {
 		int nProcesosUsuario1=0;
 		int nProcesosUsuario2=0;
@@ -444,6 +448,58 @@ public class Main {
 			System.out.println(c.get(i).toString());		
 		}
 		System.out.println("=================================================");
+	}
+
+	public static void imprimirEspecificacionesGenerales(ArrayList<Proceso> c, int tipoPlanificacion, int tipoAlgoritmo, int nProcesos){
+		int total = 0;			
+		for(int i=0;i<c.size();i++){
+			total += c.get(i).getBoletos();
+		}
+		System.out.println("**************************************************");
+		System.out.println("************ESPECIFICACIONES GENERALES************");
+		if(tipoPlanificacion == 1){
+			System.out.println("tipo planificacion: APROPIATIVO");
+		}else{
+			System.out.println("tipo planificacion: NO APROPIATIVO");
+		}
+		switch (tipoAlgoritmo) {
+			case 1:
+				System.out.println("tipo planificacion: Round-Robin");
+				break;
+			case 2:
+				System.out.println("tipo planificacion: Prioridades");
+				break;
+			case 3:
+				System.out.println("tipo planificacion: Múltiples colas de prioridad");
+				break;
+			case 4:
+				System.out.println("tipo planificacion: Proceso más corto primero");
+				break;
+			case 5:
+				System.out.println("tipo planificacion: Planificacion Garantizada");
+				break;
+			case 6:
+				System.out.println("tipo planificacion: Boletos de loteria");
+				break;
+			case 7:
+				System.out.println("tipo planificacion: Participacion equitativa");
+				break;
+		}
+		System.out.println("tipo algoritmo: "+tipoAlgoritmo);
+		System.out.println("quantum: "+quantum);
+		System.out.println("prioridad:");
+		if((tipoAlgoritmo == 1 ) || (tipoAlgoritmo == 2 ) || (tipoAlgoritmo == 4 ) || (tipoAlgoritmo == 6 )){
+			System.out.println("No. Usuarios:"+ 1);
+		}else if(tipoAlgoritmo == 3){
+			System.out.println("No. Usuarios:"+ 4);
+		}else{ // 5 - Planificacion Garantizada, 7 - Participacion Equitativa
+			System.out.println("No. Usuarios:"+ nUsuarios);
+		}
+		System.out.println("No. Procesos:"+ nProcesos);
+		if(tipoAlgoritmo == 6){
+			System.out.println("boletos:" + total);
+		}
+		System.out.println("**************************************************");
 	}
 
 	public static void recoridoDeParticiones(ArrayList<Proceso> c, int tipoPlanificacion, int nCantidad){
